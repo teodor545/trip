@@ -1,0 +1,150 @@
+{
+	"info": {
+		"_postman_id": "7b05ee3b-914f-4e69-a344-6d206e67ce90",
+		"name": "Trip",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "36143265"
+	},
+	"item": [
+		{
+			"name": "bulgaria request",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"startingCountryCode\": \"BG\",\r\n  \"budgetPerCountry\": 100,\r\n  \"totalBudget\": 1200,\r\n  \"currency\": \"EUR\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8082/trip/calculate",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"trip",
+						"calculate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "invalid country",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"startingCountryCode\": \"BQ1\",\r\n  \"budgetPerCountry\": 50,\r\n  \"totalBudget\": 1100,\r\n  \"currency\": \"EUR\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8082/trip/calculate",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"trip",
+						"calculate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "invalid currency",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"startingCountryCode\": \"BG\",\r\n  \"budgetPerCountry\": 1,\r\n  \"totalBudget\": 5,\r\n  \"currency\": \"Sea shells\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8082/trip/calculate",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"trip",
+						"calculate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "country with no land borders",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"startingCountryCode\": \"FO\",\r\n  \"budgetPerCountry\": 55,\r\n  \"totalBudget\": 555,\r\n  \"currency\": \"USD\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8082/trip/calculate",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"trip",
+						"calculate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "country with one border",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"startingCountryCode\": \"MC\",\r\n  \"budgetPerCountry\": 100,\r\n  \"totalBudget\": 1000,\r\n  \"currency\": \"EUR\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8082/trip/calculate",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"trip",
+						"calculate"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
