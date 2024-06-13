@@ -5,3 +5,7 @@ This site or product includes Country Borders data available from https://www.ge
 
 Usage info:<br>
 See Trip.postman_collection for examples
+
+Technologies used: Spring boot
+
+Requires data from fixer.io
