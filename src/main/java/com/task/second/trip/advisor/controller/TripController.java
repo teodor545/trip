@@ -21,19 +21,7 @@ public class TripController {
 
     @PostMapping(path = "/calculate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TripResponseDto> calculateTrip(@RequestBody TripRequestDto rateRequestDto) {
-        try {
-            TripResponseDto tripResponseDto = tripService.processTripRequest(rateRequestDto);
-            ResponseEntity<TripResponseDto> response;
-            if (tripResponseDto.getErrorMessage() != null) {
-                response = new ResponseEntity<>(tripResponseDto, HttpStatus.BAD_REQUEST);
-            } else {
-                response = new ResponseEntity<>(tripResponseDto, HttpStatus.OK);
-            }
-            return response;
-        } catch (Exception ex) {
-            TripResponseDto tripResponseDto = new TripResponseDto();
-            tripResponseDto.setErrorMessage(ex.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(tripResponseDto);
-        }
+       TripResponseDto tripResponseDto = tripService.processTripRequest(rateRequestDto);
+       return new ResponseEntity<>(tripResponseDto, HttpStatus.OK);
     }
 }

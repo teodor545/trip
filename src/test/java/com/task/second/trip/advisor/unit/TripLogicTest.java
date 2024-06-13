@@ -1,32 +1,41 @@
 package com.task.second.trip.advisor.unit;
 
 import com.task.second.trip.advisor.data.CountryData;
+import com.task.second.trip.advisor.dto.TripRequestDto;
+import com.task.second.trip.advisor.service.TripServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Map;
+
 public class TripLogicTest {
 
-    private CountryData countryData = new CountryData();
+    private final CountryData countryData = new CountryData();
+    private final TripServiceImpl tripService = new TripServiceImpl(null, null, null);
 
     @Test
-    public void testTripLogic_basic() {
-        int tripCount = 0;
-        double totalBudget = 1200;
-        double budgetPerCountry = 100;
-        double currentAmount = 0;
-        double leftOverAmount;
+    public void testTripLogic_basic_BG() throws Exception {
+        TripRequestDto tripRequestDto = new TripRequestDto("BG", 100d, 1200d, "BGN");
 
-        int size = countryData.findBorderCountries("BG").getLandBorders().keySet().size();
+        Map<String, String> borders = countryData.findBorderCountries("BG").getLandBorders();
 
-        while (currentAmount + (budgetPerCountry * size) <= totalBudget) {
-            currentAmount += budgetPerCountry * size;
-            tripCount++;
-        }
+        Method calculateTrip = tripService.getClass().getDeclaredMethod("calculateTrip", TripRequestDto.class, Map.class);
+        calculateTrip.setAccessible(true);
 
-        leftOverAmount = totalBudget - currentAmount;;
+        Object result = calculateTrip.invoke(tripService, tripRequestDto, borders);
+        Field tripCountField = result.getClass().getDeclaredField("tripCount");
+        tripCountField.setAccessible(true);
 
+        int tripCount = (int) tripCountField.get(result);
 
-        Assertions.assertEquals(2, tripCount);
-        Assertions.assertEquals(200, leftOverAmount);
+        Field leftOverAmountField = result.getClass().getDeclaredField("leftOverAmount");
+        leftOverAmountField.setAccessible(true);
+
+        double leftOverAmount = (double) leftOverAmountField.get(result);
+
+       Assertions.assertEquals(2, tripCount);
+       Assertions.assertEquals(200, leftOverAmount);
     }
 }

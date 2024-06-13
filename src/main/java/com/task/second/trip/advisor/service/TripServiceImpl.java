@@ -7,6 +7,8 @@ import com.task.second.trip.advisor.exception.InvalidCountryException;
 import com.task.second.trip.advisor.exception.InvalidCurrencyException;
 import com.task.second.trip.advisor.exception.NoLandBorderException;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -28,26 +30,14 @@ public class TripServiceImpl implements TripService {
         String startingCountryCode = tripRequestDto.getStartingCountryCode();
         String currency = tripRequestDto.getCurrency();
 
-        int tripCount = 0;
-        double totalBudget = tripRequestDto.getTotalBudget();
-        double budgetPerCountry = tripRequestDto.getBudgetPerCountry();
-        double currentAmount = 0;
-        double leftOverAmount;
-
         Map<String, String> borders = countryData.findBorderCountries(startingCountryCode).getLandBorders();
-
         validateData(currency, borders);
 
-        int borderCount = borders.keySet().size();
-        while (currentAmount + (budgetPerCountry * borderCount) <= totalBudget) {
-            currentAmount += budgetPerCountry * borderCount;
-            tripCount++;
-        }
-        leftOverAmount = totalBudget - currentAmount;
+        TripCalculation result = calculateTrip(tripRequestDto, borders);
 
         CurrencyRateDto currencyRate = requestCurrencyRates(currency, borders.keySet());
 
-        return createResponse(tripRequestDto, currencyRate, borders, tripCount, leftOverAmount);
+        return createResponse(tripRequestDto, currencyRate, borders, result.tripCount(), result.leftOverAmount());
     }
 
     private CurrencyRateDto requestCurrencyRates(String baseCurrency, Set<String> targetCurrencies) {
@@ -104,5 +94,24 @@ public class TripServiceImpl implements TripService {
             }
         }
         return tripResponseDto;
+    }
+
+    private TripCalculation calculateTrip(TripRequestDto tripRequestDto, Map<String, String> borders) {
+        int tripCount = 0;
+        double totalBudget = tripRequestDto.getTotalBudget();
+        double budgetPerCountry = tripRequestDto.getBudgetPerCountry();
+        double currentAmount = 0;
+        double leftOverAmount;
+
+        int borderCount = borders.keySet().size();
+        while (currentAmount + (budgetPerCountry * borderCount) <= totalBudget) {
+            currentAmount += budgetPerCountry * borderCount;
+            tripCount++;
+        }
+        leftOverAmount = totalBudget - currentAmount;
+        return new TripCalculation(tripCount, leftOverAmount);
+    }
+
+    private record TripCalculation(int tripCount, double leftOverAmount) {
     }
 }
